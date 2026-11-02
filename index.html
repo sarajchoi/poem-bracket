@@ -37,7 +37,7 @@ details{margin-top:16px}summary{cursor:pointer;font:600 .9rem system-ui,sans-ser
 <header><h1>Poem Slide Showdown</h1><div class="sub" id="sub"></div></header>
 <main id="app"></main>
 <script>
-const TO="sarajc@chalkpost.org";
+const TO="sarajc@chalkpost.com";
 const T=["Laundry","The Lotus","October 22nd","To autumn: late youth","Seasons","Liar","Note","Pick a card","sleep","The beauty of autumn","Rocket","Mirror","Finding Home","Pokéball","Mr. Owl ate my metal worm","An Eternal Life","Messy Room"];
 const img=i=>"s-"+String(i+1).padStart(2,"0")+".jpg";
 const KEY="poemBracket1";
@@ -88,7 +88,7 @@ function render(){
  }else{
   sub.textContent="Your top 3 are ready. Add notes, then send or save.";
   const p=[["1st · Champion",S.champ],["2nd · Runner-up",S.second],["3rd Place",S.third]];
-  app.innerHTML='<div class="podium">'+p.map((x,i)=>'<div class="pod"><h2>'+x[0]+'</h2><img src="'+img(x[1])+'" alt="'+T[x[1]]+'"><strong>'+T[x[1]]+'</strong><textarea data-n="'+i+'" placeholder="Why does this one stand out? (optional)">'+S.notes[i]+'</textarea></div>').join('')+'</div>'+
+  app.innerHTML='<div class="podium">'+p.map((x,i)=>'<div class="pod"><h2>'+x[0]+'</h2><img src="'+img(x[1])+'" alt="'+T[x[1]]+'"><strong>'+T[x[1]]+'</strong><textarea data-n="'+i+'" placeholder="Why does this one stand out? (must respond!)">'+S.notes[i]+'</textarea></div>').join('')+'</div>'+
   '<div class="btns"><a class="b p" id="mail" href="#">Email to '+TO+'</a><button class="b" id="cp">Copy results</button><button class="b" id="dl">Download results (.txt)</button><button class="b" id="rs">Play again</button></div><div class="note" id="msg"></div>'+
   '<details><summary>Full bracket</summary>'+bracketHTML()+'</details>';
   const upd=()=>{document.getElementById("mail").href="mailto:"+TO+"?subject="+encodeURIComponent("My top 3 poem slides")+"&body="+encodeURIComponent(report())};
