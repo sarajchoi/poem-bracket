@@ -39,7 +39,7 @@ details{margin-top:16px}summary{cursor:pointer;font:600 .9rem system-ui,sans-ser
 <script>
 const TO="sarajc@chalkpost.org";
 const T=["Laundry","The Lotus","October 22nd","To autumn: late youth","Seasons","Liar","Note","Pick a card","sleep","The beauty of autumn","Rocket","Mirror","Finding Home","Pokéball","Mr. Owl ate my metal worm","An Eternal Life","Messy Room"];
-const img=i=>"slides/s-"+String(i+1).padStart(2,"0")+".jpg";
+const img=i=>"s-"+String(i+1).padStart(2,"0")+".jpg";
 const KEY="poemBracket1";
 let S;
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
