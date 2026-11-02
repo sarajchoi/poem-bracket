@@ -36,6 +36,8 @@ details{margin-top:16px}summary{cursor:pointer;font:600 .9rem system-ui,sans-ser
 </style></head><body>
 <header><h1>Poem Slide Showdown</h1><div class="sub" id="sub"></div></header>
 <main id="app"></main>
+<form name="poem-picks" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+<input name="form-name" value="poem-picks"><input name="bot-field"><input name="voter"><input name="first_place"><input name="first_notes"><input name="second_place"><input name="second_notes"><input name="third_place"><input name="third_notes"><textarea name="summary"></textarea></form>
 <script>
 const TO="sarajc@chalkpost.com";
 const T=["Laundry","The Lotus","October 22nd","To autumn: late youth","Seasons","Liar","Note","Pick a card","sleep","The beauty of autumn","Rocket","Mirror","Finding Home","Pokéball","Mr. Owl ate my metal worm","An Eternal Life","Messy Room"];
@@ -89,12 +91,22 @@ function render(){
   sub.textContent="Your top 3 are ready. Add notes, then send or save.";
   const p=[["1st · Champion",S.champ],["2nd · Runner-up",S.second],["3rd Place",S.third]];
   app.innerHTML='<div class="podium">'+p.map((x,i)=>'<div class="pod"><h2>'+x[0]+'</h2><img src="'+img(x[1])+'" alt="'+T[x[1]]+'"><strong>'+T[x[1]]+'</strong><textarea data-n="'+i+'" placeholder="Why does this one stand out? (must respond!)">'+S.notes[i]+'</textarea></div>').join('')+'</div>'+
-  '<div class="btns"><a class="b p" id="mail" href="#">Email to '+TO+'</a><button class="b" id="cp">Copy results</button><button class="b" id="dl">Download results (.txt)</button><button class="b" id="rs">Play again</button></div><div class="note" id="msg"></div>'+
+  '<div class="btns"><input id="who" placeholder="Your name (optional)" style="font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)"> <button class="b p" id="send">Submit my top 3</button></div><div class="btns"><a class="b" id="mail" href="#" target="_blank" rel="noopener">Or email via Gmail</a><button class="b" id="cp">Copy results</button><button class="b" id="dl">Download results (.txt)</button><button class="b" id="rs">Play again</button></div><div class="note" id="msg"></div>'+
   '<details><summary>Full bracket</summary>'+bracketHTML()+'</details>';
-  const upd=()=>{document.getElementById("mail").href="mailto:"+TO+"?subject="+encodeURIComponent("My top 3 poem slides")+"&body="+encodeURIComponent(report())};
+  const upd=()=>{document.getElementById("mail").href="https://mail.google.com/mail/?view=cm&fs=1&to="+TO+"&su="+encodeURIComponent("My top 3 poem slides")+"&body="+encodeURIComponent(report())};
   upd();
   app.querySelectorAll("textarea").forEach(t=>t.oninput=()=>{S.notes[+t.dataset.n]=t.value;save();upd()});
   const msg=t=>document.getElementById("msg").textContent=t;
+  const sb=document.getElementById("send");
+  sb.onclick=()=>{
+   const d={"form-name":"poem-picks","bot-field":"",voter:document.getElementById("who").value,
+    first_place:T[S.champ],first_notes:S.notes[0],second_place:T[S.second],second_notes:S.notes[1],third_place:T[S.third],third_notes:S.notes[2],summary:report()};
+   sb.disabled=true;msg("Sending...");
+   fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams(d).toString()})
+    .then(r=>{if(!r.ok)throw 0;msg("Sent! Thank you.");sb.textContent="Submitted"})
+    .catch(()=>{sb.disabled=false;msg("Couldn't submit from here. Please use the email or download button instead.")});
+  };
+  const msg0=t=>document.getElementById("msg").textContent=t;
   document.getElementById("cp").onclick=()=>navigator.clipboard.writeText(report()).then(()=>msg("Copied!"),()=>msg("Copy failed. Use the download button instead."));
   document.getElementById("dl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([report()],{type:"text/plain"}));a.download="my-top-3-poems.txt";a.click()};
   document.getElementById("rs").onclick=()=>{S=fresh();save();render()};
